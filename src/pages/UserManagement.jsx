@@ -9,6 +9,8 @@ const ROLE_CONFIG = {
   viewer:     { label: 'Viewer',      color: 'bg-gray-100 text-gray-600', icon: Eye }
 };
 
+const API_BASE_URL = import.meta.env.VITE_API_PATH || '/api/crm';
+
 const initialFormState = {
   username: '',
   password: '',
@@ -30,7 +32,7 @@ const UserManagement = () => {
     setLoading(true);
     setError('');
     try {
-      const { data } = await axios.get('/api/crm/auth/users');
+      const { data } = await axios.get(`${API_BASE_URL}/auth/users`);
       setUsers(data.users || []);
     } catch (err) {
       setError(err.response?.data?.message || 'Failed to fetch users.');
@@ -79,9 +81,9 @@ const UserManagement = () => {
       if (editingUser) {
         const updatePayload = { name: formData.name, role: formData.role };
         if (formData.password) updatePayload.password = formData.password;
-        await axios.put(`/api/crm/auth/users/${editingUser.id || editingUser._id}`, updatePayload);
+        await axios.put(`${API_BASE_URL}/auth/users/${editingUser.id || editingUser._id}`, updatePayload);
       } else {
-        await axios.post('/api/crm/auth/users', formData);
+        await axios.post(`${API_BASE_URL}/auth/users`, formData);
       }
       setIsModalOpen(false);
       fetchUsers();
@@ -95,7 +97,7 @@ const UserManagement = () => {
   const handleDeactivate = async (user) => {
     if (!window.confirm(`Deactivate user "${user.name}"? They will no longer be able to login.`)) return;
     try {
-      await axios.delete(`/api/crm/auth/users/${user.id || user._id}`);
+      await axios.delete(`${API_BASE_URL}/auth/users/${user.id || user._id}`);
       fetchUsers();
     } catch (err) {
       alert(err.response?.data?.message || 'Failed to deactivate user.');
@@ -104,7 +106,7 @@ const UserManagement = () => {
 
   const handleToggleActive = async (user) => {
     try {
-      await axios.put(`/api/crm/auth/users/${user.id || user._id}`, { isActive: !user.isActive });
+      await axios.put(`${API_BASE_URL}/auth/users/${user.id || user._id}`, { isActive: !user.isActive });
       fetchUsers();
     } catch (err) {
       alert(err.response?.data?.message || 'Failed to update user.');

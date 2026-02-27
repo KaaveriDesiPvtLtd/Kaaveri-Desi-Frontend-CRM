@@ -3,6 +3,8 @@ import { Dialog, Transition } from '@headlessui/react'
 import { X, Package, Calendar, Hash, IndianRupee } from 'lucide-react'
 import axios from 'axios'
 
+const API_BASE_URL = import.meta.env.VITE_API_PATH || '/api/crm';
+
 export default function ReceiveStockModal({ isOpen, onClose, product, onStockReceived }) {
   const [formData, setFormData] = useState({
     batchCode: '',
@@ -42,7 +44,7 @@ export default function ReceiveStockModal({ isOpen, onClose, product, onStockRec
     setError('')
 
     try {
-      await axios.post('/api/crm/stock/receive', {
+      await axios.post(`${API_BASE_URL}/stock/receive`, {
         productId: product._id,
         batchData: {
           batchCode: formData.batchCode,

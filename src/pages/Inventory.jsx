@@ -5,6 +5,8 @@ import AddProductModal from '../components/AddProductModal';
 import ReceiveStockModal from '../components/ReceiveStockModal';
 import { useAuth } from '../context/AuthContext';
 
+const API_BASE_URL = import.meta.env.VITE_API_PATH || '/api/crm';
+
 const Inventory = () => {
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -21,7 +23,7 @@ const Inventory = () => {
     setLoading(true);
     setError('');
     try {
-      const { data } = await axios.get('/api/crm/products');
+      const { data } = await axios.get(`${API_BASE_URL}/products`);
       const productsArray = Array.isArray(data) ? data : [];
       setProducts(productsArray);
       setLoading(false);
@@ -40,7 +42,7 @@ const Inventory = () => {
   const handleDelete = async (id) => {
     if (!window.confirm("Are you sure you want to delete this product?")) return;
     try {
-      await axios.delete(`/api/crm/products/${id}`);
+      await axios.delete(`${API_BASE_URL}/products/${id}`);
       fetchProducts();
       alert("Product deleted successfully");
     } catch (err) {

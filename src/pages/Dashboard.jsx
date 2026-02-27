@@ -5,6 +5,8 @@ import axios from 'axios';
 
 const POLL_INTERVAL = 10000; // 10 seconds
 
+const API_BASE_URL = import.meta.env.VITE_API_PATH || '/api/crm';
+
 // ── Skeleton loaders ──────────────────────────────────────────────────────────
 const SkeletonCard = () => (
   <div className="bg-white rounded-xl shadow-sm p-6 border border-slate-100 animate-pulse">
@@ -80,7 +82,7 @@ const Dashboard = () => {
   // ── Fetch functions ───────────────────────────────────────────────────────
   const fetchKpis = useCallback(async () => {
     try {
-      const { data } = await axios.get('/api/crm/dashboard/kpis');
+      const { data } = await axios.get(`${API_BASE_URL}/dashboard/kpis`);
       setKpis(data);
     } catch (e) {
       console.error('KPI fetch error:', e);
@@ -92,7 +94,7 @@ const Dashboard = () => {
   const fetchChart = useCallback(async (period) => {
     setChartLoading(true);
     try {
-      const { data } = await axios.get(`/api/crm/dashboard/sales-by-channel?period=${period}`);
+      const { data } = await axios.get(`${API_BASE_URL}/dashboard/sales-by-channel?period=${period}`);
       setChartData(data);
     } catch (e) {
       console.error('Chart fetch error:', e);
@@ -103,7 +105,7 @@ const Dashboard = () => {
 
   const fetchStock = useCallback(async () => {
     try {
-      const { data } = await axios.get('/api/crm/dashboard/low-stock');
+      const { data } = await axios.get(`${API_BASE_URL}/dashboard/low-stock`);
       setStockData(data);
     } catch (e) {
       console.error('Stock fetch error:', e);

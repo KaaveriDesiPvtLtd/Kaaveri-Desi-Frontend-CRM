@@ -3,6 +3,8 @@ import { Dialog, Transition } from '@headlessui/react'
 import { X, Plus, Trash2 } from 'lucide-react'
 import axios from 'axios'
 
+const API_BASE_URL = import.meta.env.VITE_API_PATH || '/api/crm';
+
 export default function AddProductModal({ isOpen, onClose, onProductAdded, productToEdit }) {
   const initialFormState = {
     productId: '',
@@ -200,9 +202,9 @@ export default function AddProductModal({ isOpen, onClose, onProductAdded, produ
       };
 
       if (productToEdit) {
-        await axios.put(`/api/crm/products/${productToEdit._id}`, cleanedData);
+        await axios.put(`${API_BASE_URL}/products/${productToEdit._id}`, cleanedData);
       } else {
-        await axios.post('/api/crm/products', cleanedData);
+        await axios.post(`${API_BASE_URL}/products`, cleanedData);
       }
       
       onProductAdded(); // Refetch products

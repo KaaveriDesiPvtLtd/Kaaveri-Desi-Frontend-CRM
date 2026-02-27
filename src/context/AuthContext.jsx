@@ -2,6 +2,7 @@ import React, { createContext, useState, useContext, useEffect, useCallback } fr
 import axios from 'axios';
 
 const AuthContext = createContext(null);
+const API_BASE_URL = import.meta.env.VITE_API_PATH || '/api/crm';
 
 // Permissions matrix (mirrors backend)
 const PERMISSIONS = {
@@ -49,7 +50,7 @@ export const AuthProvider = ({ children }) => {
   useEffect(() => {
     const interceptor = axios.interceptors.request.use((config) => {
       const storedToken = localStorage.getItem('crm_token');
-      if (storedToken && config.url?.startsWith('/api/crm')) {
+      if (storedToken && config.url?.startsWith(API_BASE_URL)) {
         config.headers.Authorization = `Bearer ${storedToken}`;
       }
       return config;
@@ -67,7 +68,7 @@ export const AuthProvider = ({ children }) => {
       }
 
       try {
-        const { data } = await axios.get('/api/crm/auth/me', {
+        const { data } = await axios.get(`${API_BASE_URL}/auth/me`, {
           headers: { Authorization: `Bearer ${token}` }
         });
 
@@ -87,7 +88,7 @@ export const AuthProvider = ({ children }) => {
   }, []);
 
   const login = async (username, password) => {
-    const { data } = await axios.post('/api/crm/auth/login', { username, password });
+    const { data } = await axios.post(`${API_BASE_URL}/auth/login`, { username, password });
 
     if (data.success) {
       localStorage.setItem('crm_token', data.token);

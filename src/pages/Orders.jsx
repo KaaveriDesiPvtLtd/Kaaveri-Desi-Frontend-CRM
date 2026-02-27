@@ -4,7 +4,7 @@ import axios from 'axios';
 import moment from 'moment';
 import { useAuth } from '../context/AuthContext';
 
-const API_BASE_URL = '/api/crm';
+const API_BASE_URL = import.meta.env.VITE_API_PATH || '/api/crm';
 
 const Orders = () => {
   const [orders, setOrders] = useState([]);
